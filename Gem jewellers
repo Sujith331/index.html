@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Gem Jewellery Purity</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #212529;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+        .app-container {
+            max-width: 500px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d4af37;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            color: #111;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+        .input-section {
+            background: #fdfaf2;
+            border: 1px solid #f1e4c3;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .form-group {
+            flex: 1;
+        }
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #495057;
+            display: block;
+            margin-bottom: 4px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 16px; /* Prevents iPhone auto-zooming on focus */
+            background-color: #fff;
+            outline: none;
+            -webkit-appearance: none; /* Removes native iOS inner input shadows */
+            appearance: none;
+        }
+        input:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+        .results-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+        }
+        .k24::before { background-color: #ffc107; }
+        .k22::before { background-color: #e5c158; }
+        .k18::before { background-color: #e0a800; }
+        .k9::before { background-color: #c19a6b; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .carat-badge {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #111;
+        }
+        .purity-spec {
+            font-size: 0.8rem;
+            color: #6c757d;
+            background: #f1f3f5;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .weight-display {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1b1e21;
+            margin-bottom: 6px;
+        }
+        .breakdown {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #495057;
+            border-top: 1px dashed #e9ecef;
+            padding-top: 6px;
+        }
+        .breakdown span strong {
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Gem Jewellery Purity</h1>
+        <p>Custom Percentage to Carat Converter</p>
+    </div>
+
+    <!-- INPUT BLOCK -->
+    <div class="input-section">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="inputWeight">Weight (grams):</label>
+                <input type="number" id="inputWeight" placeholder="0.000" step="any" inputmode="decimal" oninput="calculateCustomAll()">
+            </div>
+            <div class="form-group">
+                <label for="inputPurity">Purity Percentage (%):</label>
+                <input type="number" id="inputPurity" placeholder="e.g. 81.1" step="any" min="0" max="100" inputmode="decimal" oninput="calculateCustomAll()">
+            </div>
+        </div>
+    </div>
+
+    <div class="results-title">Target Carat Equivalents</div>
+
+    <!-- OUTPUT CARDS -->
+    <!-- 24K -->
+    <div class="card k24">
+        <div class="card-header">
+            <span class="carat-badge">24 Carat</span>
+            <span class="purity-spec">99.9% Pure basis</span>
+        </div>
+        <div class="weight-display" id="w24">0.000 g</div>
+        <div class="breakdown">
+            <span>Pure Gold: <strong id="pure24">0.000 g</strong></span>
+            <span>Alloy Required: <strong id="alloy24">0.000 g</strong></span>
+        </div>
+    </div>
+
+    <!-- 22K -->
+    <div class="card k22">
+        <div class="card-header">
+            <span class="carat-badge">22 Carat</span>
+            <span class="purity-spec">91.67% Standard</span>
+        </div>
+        <div class="weight-display" id="w22">0.000 g</div>
+        <div class="breakdown">
+            <span>Pure Gold: <strong id="pure22">0.000 g</strong></span>
+            <span>Alloy Required: <strong id="alloy22">0.000 g</strong></span>
+        </div>
+    </div>
+
+    <!-- 18K -->
+    <div class="card k18">
+        <div class="card-header">
+            <span class="carat-badge">18 Carat</span>
+            <span class="purity-spec">75.0% Standard</span>
+        </div>
+        <div class="weight-display" id="w18">0.000 g</div>
+        <div class="breakdown">
+            <span>Pure Gold: <strong id="pure18">0.000 g</strong></span>
+            <span>Alloy Required: <strong id="alloy18">0.000 g</strong></span>
+        </div>
+    </div>
+
+    <!-- 9K -->
+    <div class="card k9">
+        <div class="card-header">
+            <span class="carat-badge">9 Carat</span>
+            <span class="purity-spec">37.5% Standard</span>
+        </div>
+        <div class="weight-display" id="w9">0.000 g</div>
+        <div class="breakdown">
+            <span>Pure Gold: <strong id="pure9">0.000 g</strong></span>
+            <span>Alloy Required: <strong id="alloy9">0.000 g</strong></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateCustomAll() {
+        const weight = parseFloat(document.getElementById('inputWeight').value);
+        const purityPercent = parseFloat(document.getElementById('inputPurity').value);
+
+        // Standard safety checks across mobile browsers
+        if (isNaN(weight) || weight <= 0 || isNaN(purityPercent) || purityPercent < 0) {
+            clearOutputs();
+            return;
+        }
+
+        // Core extraction based on custom user percentage
+        const absolutePureGold = weight * (purityPercent / 100);
+
+        updateCard('24', absolutePureGold, 24);
+        updateCard('22', absolutePureGold, 22);
+        updateCard('18', absolutePureGold, 18);
+        updateCard('9', absolutePureGold, 9);
+    }
+
+    function updateCard(id, pureGold, targetCarat) {
+        const totalWeight = pureGold * (24 / targetCarat);
+        const alloyWeight = totalWeight - pureGold;
+
+        document.getElementById(`w${id}`).innerText = totalWeight.toFixed(3) + ' g';
+        document.getElementById(`pure${id}`).innerText = pureGold.toFixed(3) + ' g';
+        document.getElementById(`alloy${id}`).innerText = Math.max(0, alloyWeight).toFixed(3) + ' g';
+    }
+
+    function clearOutputs() {
+        const carats = ['24', '22', '18', '9'];
+        carats.forEach(id => {
+            document.getElementById(`w${id}`).innerText = '0.000 g';
+            document.getElementById(`pure${id}`).innerText = '0.000 g';
+            document.getElementById(`alloy${id}`).innerText = '0.000 g';
+        });
+    }
+</script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4af37">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Gem Purity">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+</body>
+</html>
